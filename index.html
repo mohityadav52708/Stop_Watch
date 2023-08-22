@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Stopwatch App</title>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stopwatch {
+    font-size: 36px;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h1>Stopwatch</h1>
+        <div class="stopwatch" id="stopwatch">00:00:00</div>
+        <button id="startButton">Start</button>
+        <button id="stopButton">Stop</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const stopwatch = document.getElementById("stopwatch");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const resetButton = document.getElementById("resetButton");
+
+    let startTime = 0;
+    let interval;
+
+    function formatTime(time) {
+        const pad = val => val.toString().padStart(2, "0");
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = time % 60;
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    function updateStopwatch() {
+        const currentTime = Math.floor((Date.now() - startTime) / 1000);
+        stopwatch.innerHTML = formatTime(currentTime);
+    }
+
+    startButton.addEventListener("click", function () {
+        startTime = Date.now() - (startTime - startTime); // If paused, start from where it was paused
+        interval = setInterval(updateStopwatch, 1000);
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        resetButton.disabled = true;
+    });
+
+    stopButton.addEventListener("click", function () {
+        clearInterval(interval);
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        resetButton.disabled = false;
+    });
+
+    resetButton.addEventListener("click", function () {
+        clearInterval(interval);
+        startTime = 0;
+        stopwatch.innerHTML = formatTime(0);
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        resetButton.disabled = true;
+    });
+});
+
+    </script>
+</body>
+</html>
